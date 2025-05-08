@@ -1,1 +1,10 @@
-Write your naming convention and approach here. see [Some Thoughts on Naming](Some-Thoughts-on-Naming.md)
+| Area                       | Convention                                                                                                                                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Folders**                | feature‑based root (`dashboard/`, `auth/`, `widgets/`).<br>Sub‑dirs: `components/`, `containers/`, `hooks/`, `handlers/`, `styles/`. All **kebab‑case**.                                    |
+| **Files**                  | React components → **PascalCase.tsx** (`UserCard.tsx`).<br>Utilities/tests/JSON → **camelCase** (`dateUtils.ts`, `userMocks.test.ts`).                                                      |
+| **Code identifiers**       | Components → PascalCase · Custom hooks → `useXxx` · Handlers → `handleXxx` · State vars → `is/has/shouldXxx`, setters → `setXxx` · Types/interfaces → PascalCase (`LogEntry`, `ILogEntry`). |
+| **CSS / class names**      | kebab‑case when plain CSS; camelCase when CSS‑modules.                                                                                                                                      |
+| **Git branches**           | `feat/<ticket>-short-desc`, `fix/<issue>-short-desc`; release tags `vX.Y.Z`.                                                                                                                |
+| **Commits (Conventional)** | `type(scope): subject` e.g. `feat(logs): add time‑range filter`.                                                                                                                            |
+| **Spell‑check & lint**     | VS Code *Code Spell Checker* + Prettier + ESLint on pre‑commit.                                                                                                                             |
+| **Rule #1**                | Pick it, document it (`docs/naming.md`), **apply it everywhere**.                                                                                                                           |
