@@ -17,7 +17,7 @@ const yellowTeamMembers: TeamMember[] = [
 const orangeTeamMembers: TeamMember[] = [
   { name: 'Anthony Chung', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
   { name: 'Anthony Milas', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
-  { name: 'Desmond Nebah', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
+  { name: 'Desmond Nebah', email: 'sampleemail@u.northwestern.edu', picture: 'assets/Desmond.jpg' },
   { name: 'Qanita Zahara', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
   { name: 'Ziad Elbadry', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' }
 ];
