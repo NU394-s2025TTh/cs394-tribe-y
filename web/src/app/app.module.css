@@ -1,0 +1,29 @@
+/* Your styles goes here. */
+
+.box {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  border-radius: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+}
+
+.yellowBox {
+  background-color: #FFD700;
+}
+
+.orangeBox {
+  background-color: #FFA500;
+}
+
+.boxContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
