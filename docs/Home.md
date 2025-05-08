@@ -8,6 +8,8 @@ Additionally, the home page should link to an area for the tribe's [Organization
 
 Go to the [Architecture Overview](Architecture-Overview.md) to see how this application is structured at a high level
 
+Project Backlog: https://github.com/orgs/NU394-s2025TTh/projects/8/views/1?filterQuery=&layout=board
+
 # Attribution
 
 to help with attributing work in the project documentation; please indicate who and what team worked on authoring the page, e.g. (written by team gray @toddwseattle). Project Documentations are repos; so the commits can help with who authored what but we expect you to collaborate so the commits will only sort of be representative. If a "guild" is working on a page, create a page indicating who is in the guild that authored the page; e.g.
