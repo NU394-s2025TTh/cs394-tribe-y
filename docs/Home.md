@@ -3,12 +3,16 @@
 Client - TNE.ai (contact Rich Tong)
 Task is to analyze AI logs to further assist the production of TNE.AI
 
-# Helpful Link
+# Helpful Links
 
 [Organizational Practices](Organizational-Practices.md)
+
 [Development Practices](Development-Practices.md)
+
 [Client Information](Client-Information.md)
+
 [Architecture Overview](Architecture-Overview.md)
+
 
 Project Backlog: https://github.com/orgs/NU394-s2025TTh/projects/8/views/1?filterQuery=&layout=board
 
