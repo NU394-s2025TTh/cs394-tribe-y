@@ -7,7 +7,7 @@ interface TeamMember {
 }
 
 const yellowTeamMembers: TeamMember[] = [
-  { name: 'Coel Morcott', email: 'coelmorcott@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
+  { name: 'Coel Morcott', email: 'coelmorcott@u.northwestern.edu', picture: '../../public/assets/coel.jpg' },
   { name: 'Connor Lai', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
   { name: 'Brenda Mutai', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
   { name: 'Ryan Luedtke', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
@@ -28,7 +28,7 @@ export const ColoredBoxes: React.FC = () => {
       <div
         style={{
           width: '300px',
-          height: '500px',
+          height: '1500px',
           backgroundColor: 'yellow',
           display: 'flex',
           flexDirection: 'column',
@@ -59,7 +59,18 @@ export const ColoredBoxes: React.FC = () => {
               }}
             >
               <div style={{ fontWeight: 'bold' }}>{member.name}</div>
-              <div style={{ fontSize: '14px' }}>{member.email}</div>
+              <a 
+                href={`mailto:${member.email}`}
+                style={{ 
+                  fontSize: '14px', 
+                  color: 'inherit',
+                  textDecoration: 'none',
+                  display: 'block',
+                  marginBottom: '8px'
+                }}
+              >
+                {member.email}
+              </a>
               <img src={member.picture} alt={member.name} style={{ width: '100%', height: 'auto', marginTop: '8px' }} />
             </div>
           ))}
@@ -68,7 +79,7 @@ export const ColoredBoxes: React.FC = () => {
       <div
         style={{
           width: '300px',
-          height: '500px',
+          height: '1500px',
           backgroundColor: 'orange',
           display: 'flex',
           flexDirection: 'column',
@@ -99,7 +110,18 @@ export const ColoredBoxes: React.FC = () => {
               }}
             >
               <div style={{ fontWeight: 'bold' }}>{member.name}</div>
-              <div style={{ fontSize: '14px' }}>{member.email}</div>
+              <a 
+                href={`mailto:${member.email}`}
+                style={{ 
+                  fontSize: '14px', 
+                  color: 'inherit',
+                  textDecoration: 'none',
+                  display: 'block',
+                  marginBottom: '8px'
+                }}
+              >
+                {member.email}
+              </a>
               <img src={member.picture} alt={member.name} style={{ width: '100%', height: 'auto', marginTop: '8px' }} />
             </div>
           ))}
