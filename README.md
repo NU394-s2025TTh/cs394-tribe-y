@@ -1,5 +1,7 @@
 # CS 394 Template NX Repo
 
+# PROJECT BACKLOG: https://github.com/orgs/NU394-s2025TTh/projects/8/views/1?filterQuery=&layout=board
+
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
 ✨ This is an empty [Nx workspace](https://nx.dev) for your tribe to populate ✨.
