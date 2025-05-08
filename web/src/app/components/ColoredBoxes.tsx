@@ -1,5 +1,5 @@
 import React from 'react';
-
+// '../../public/assets/coel.jpg' 
 interface TeamMember {
   name: string;
   email: string;
@@ -7,7 +7,7 @@ interface TeamMember {
 }
 
 const yellowTeamMembers: TeamMember[] = [
-  { name: 'Coel Morcott', email: 'coelmorcott@u.northwestern.edu', picture: '../../public/assets/coel.jpg' },
+  { name: 'Coel Morcott', email: 'coelmorcott@u.northwestern.edu', picture: 'assets/coel.jpg' },
   { name: 'Connor Lai', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
   { name: 'Brenda Mutai', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
   { name: 'Ryan Luedtke', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
