@@ -11,7 +11,7 @@ const yellowTeamMembers: TeamMember[] = [
   { name: 'Connor Lai', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
   { name: 'Brenda Mutai', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
   { name: 'Ryan Luedtke', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' },
-  { name: 'Haipeng Shen', email: 'sampleemail@u.northwestern.edu', picture: 'https://via.placeholder.com/150' }
+  { name: 'Haipeng Shen', email: 'haipengshen2026@u.northwestern.edu', picture: 'assets/Haipeng.JPG' }
 ];
 
 const orangeTeamMembers: TeamMember[] = [
