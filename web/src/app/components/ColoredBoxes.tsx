@@ -76,7 +76,7 @@ export const ColoredBoxes: React.FC = () => {
       <div
         style={{
           width: '300px',
-          height: '1500px',
+          height: '100%',
           backgroundColor: 'yellow',
           display: 'flex',
           flexDirection: 'column',
@@ -102,10 +102,9 @@ export const ColoredBoxes: React.FC = () => {
             <div
               key={index}
               style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                backgroundColor: 'rgba(216, 234, 19, 0.91)',
                 padding: '10px',
                 borderRadius: '4px',
-                width: '100%',
               }}
             >
               <div style={{ fontWeight: 'bold' }}>{member.name}</div>
@@ -113,7 +112,7 @@ export const ColoredBoxes: React.FC = () => {
                 href={`mailto:${member.email}`}
                 style={{
                   fontSize: '14px',
-                  color: 'inherit',
+                  color: 'blue',
                   textDecoration: 'none',
                   display: 'block',
                   marginBottom: '8px',
@@ -124,7 +123,12 @@ export const ColoredBoxes: React.FC = () => {
               <img
                 src={member.picture}
                 alt={member.name}
-                style={{ width: '100%', height: 'auto', marginTop: '8px' }}
+                style={{
+                  width: '100px',
+                  borderRadius: '150px',
+                  height: '100px',
+                  marginTop: '8px',
+                }}
               />
             </div>
           ))}
@@ -133,7 +137,7 @@ export const ColoredBoxes: React.FC = () => {
       <div
         style={{
           width: '300px',
-          height: '1500px',
+          height: '100%',
           backgroundColor: 'orange',
           display: 'flex',
           flexDirection: 'column',
@@ -162,7 +166,8 @@ export const ColoredBoxes: React.FC = () => {
                 backgroundColor: 'rgba(255, 255, 255, 0.3)',
                 padding: '10px',
                 borderRadius: '4px',
-                width: '100%',
+                
+
               }}
             >
               <div style={{ fontWeight: 'bold' }}>{member.name}</div>
@@ -170,7 +175,7 @@ export const ColoredBoxes: React.FC = () => {
                 href={`mailto:${member.email}`}
                 style={{
                   fontSize: '14px',
-                  color: 'inherit',
+                  color: 'blue',
                   textDecoration: 'none',
                   display: 'block',
                   marginBottom: '8px',
@@ -181,7 +186,12 @@ export const ColoredBoxes: React.FC = () => {
               <img
                 src={member.picture}
                 alt={member.name}
-                style={{ width: '100%', height: 'auto', marginTop: '8px' }}
+                style={{
+                  width: '100px',
+                  borderRadius: '150px',
+                  height: '100px',
+                  marginTop: '8px',
+                }}
               />
             </div>
           ))}
