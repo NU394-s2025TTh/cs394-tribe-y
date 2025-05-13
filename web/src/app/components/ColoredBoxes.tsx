@@ -107,6 +107,16 @@ export const ColoredBoxes: React.FC = () => {
                 borderRadius: '4px',
               }}
             >
+              <img
+                src={member.picture}
+                alt={member.name}
+                style={{
+                  width: '100px',
+                  height: '120px',
+                  marginBottom: '8px',
+                 
+                }}
+              />
               <div style={{ fontWeight: 'bold' }}>{member.name}</div>
               <a
                 href={`mailto:${member.email}`}
@@ -120,16 +130,7 @@ export const ColoredBoxes: React.FC = () => {
               >
                 {member.email}
               </a>
-              <img
-                src={member.picture}
-                alt={member.name}
-                style={{
-                  width: '100px',
-                  borderRadius: '150px',
-                  height: '100px',
-                  marginTop: '8px',
-                }}
-              />
+
             </div>
           ))}
         </div>
@@ -170,6 +171,16 @@ export const ColoredBoxes: React.FC = () => {
 
               }}
             >
+              <img
+                src={member.picture}
+                alt={member.name}
+                style={{
+                  width: '100px',
+                  height: '120px',
+                  marginBottom: '8px',
+                 
+                }}
+              />
               <div style={{ fontWeight: 'bold' }}>{member.name}</div>
               <a
                 href={`mailto:${member.email}`}
@@ -183,16 +194,7 @@ export const ColoredBoxes: React.FC = () => {
               >
                 {member.email}
               </a>
-              <img
-                src={member.picture}
-                alt={member.name}
-                style={{
-                  width: '100px',
-                  borderRadius: '150px',
-                  height: '100px',
-                  marginTop: '8px',
-                }}
-              />
+
             </div>
           ))}
         </div>
