@@ -19,8 +19,8 @@ const yellowTeamMembers: TeamMember[] = [
   },
   {
     name: 'Brenda Mutai',
-    email: 'sampleemail@u.northwestern.edu',
-    picture: 'https://via.placeholder.com/150',
+    email: 'brendamutai2026@u.northwestern.edu',
+    picture: 'assets/brenda.jpg',
   },
   {
     name: 'Ryan Luedtke',
@@ -114,7 +114,6 @@ export const ColoredBoxes: React.FC = () => {
                   width: '100px',
                   height: '120px',
                   marginBottom: '8px',
-                 
                 }}
               />
               <div style={{ fontWeight: 'bold' }}>{member.name}</div>
@@ -130,7 +129,6 @@ export const ColoredBoxes: React.FC = () => {
               >
                 {member.email}
               </a>
-
             </div>
           ))}
         </div>
@@ -167,8 +165,6 @@ export const ColoredBoxes: React.FC = () => {
                 backgroundColor: 'rgba(255, 255, 255, 0.3)',
                 padding: '10px',
                 borderRadius: '4px',
-                
-
               }}
             >
               <img
@@ -178,7 +174,6 @@ export const ColoredBoxes: React.FC = () => {
                   width: '100px',
                   height: '120px',
                   marginBottom: '8px',
-                 
                 }}
               />
               <div style={{ fontWeight: 'bold' }}>{member.name}</div>
@@ -194,7 +189,6 @@ export const ColoredBoxes: React.FC = () => {
               >
                 {member.email}
               </a>
-
             </div>
           ))}
         </div>
