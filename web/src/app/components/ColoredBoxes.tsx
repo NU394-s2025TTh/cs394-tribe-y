@@ -57,8 +57,8 @@ const orangeTeamMembers: TeamMember[] = [
   },
   {
     name: 'Ziad Elbadry',
-    email: 'sampleemail@u.northwestern.edu',
-    picture: 'https://via.placeholder.com/150',
+    email: 'ziadelbadryshaker2025@u.northwestern.edu',
+    picture: 'assets/ZiadEl.jpg',
   },
 ];
 
