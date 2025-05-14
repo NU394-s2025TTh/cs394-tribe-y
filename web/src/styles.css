@@ -1,6 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
-/* Layout Containers */
+
 .dashboard-container {
+    margin: 0;
+    padding: 0;
   display: flex;
   height: 100vh;
   background-color: #111827;
@@ -72,7 +73,8 @@
 .kpi-card {
   background-color: #374151;
   border-radius: 1rem;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -81,7 +83,8 @@
 }
 .kpi-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 .kpi-label {
   font-size: 0.75rem;
@@ -108,7 +111,7 @@
 .dropdown:focus {
   outline: none;
   border-color: #14b8a6;
-  box-shadow: 0 0 0 3px rgba(20,184,166,0.5);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.5);
 }
 
 /* Charts */
@@ -127,7 +130,8 @@
   background-color: #374151;
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 .chart-title {
   font-size: 1.125rem;
@@ -140,7 +144,8 @@
   background-color: #374151;
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 .timeline-container {
   overflow-x: auto;
@@ -150,3 +155,9 @@
   width: max-content;
   height: 15.625rem; /* 250px */
 }
+.timeline-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #4b5563;
+} 
