@@ -15,7 +15,7 @@ const yellowTeamMembers: TeamMember[] = [
   {
     name: 'Connor Lai',
     email: 'connorlai2026@u.northwestern.edu',
-    picture: 'assets/clai.JPG',
+    picture: 'assets/Connor Lai.jpg',
   },
   {
     name: 'Brenda Mutai',
