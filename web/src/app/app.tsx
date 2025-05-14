@@ -1,5 +1,6 @@
 // Uncomment this line to use CSS modules
 // import styles from './app.module.css';
+import sampleLogs from '../mocks/sampleLogs.json';
 import LogDashboard from './components/LogDashboard';
 import './app.module.css';
 
@@ -76,7 +77,7 @@ const sampleLogData = {
 
 export function App() {
   return (
-    <LogDashboard data={sampleLogData} />
+    <LogDashboard data={sampleLogs} />
   );
 }
 

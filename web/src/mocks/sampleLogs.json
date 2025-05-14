@@ -1,0 +1,146 @@
+{
+  "data": [
+    {
+      "traceID": "demo-111",
+      "spans": [
+        {
+          "traceID": "demo-111",
+          "spanID": "root-111",
+          "operationName": "on_send_task",
+          "references": [],
+          "startTime": 1746639000000000,
+          "duration": 1800000,
+          "tags": [
+            { "key": "otel.scope.name", "type": "string", "value": "app.task_manager" },
+            { "key": "request_id", "type": "string", "value": "sess-111" },
+            { "key": "span.kind", "type": "string", "value": "internal" }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "demo-111",
+          "spanID": "post-200-111",
+          "operationName": "POST",
+          "references": [
+            { "refType": "CHILD_OF", "traceID": "demo-111", "spanID": "root-111" }
+          ],
+          "startTime": 1746639000500000,
+          "duration": 600000,
+          "tags": [
+            { "key": "http.method", "type": "string", "value": "POST" },
+            { "key": "http.url", "type": "string", "value": "https://ensemble.tne.ai/v1/chat/completions" },
+            { "key": "http.status_code", "type": "int64", "value": 200 },
+            { "key": "span.kind", "type": "string", "value": "client" }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "demo-111",
+          "spanID": "post-500-111",
+          "operationName": "POST",
+          "references": [
+            { "refType": "CHILD_OF", "traceID": "demo-111", "spanID": "root-111" }
+          ],
+          "startTime": 1746639000800000,
+          "duration": 800000,
+          "tags": [
+            { "key": "http.method", "type": "string", "value": "POST" },
+            { "key": "http.url", "type": "string", "value": "https://ensemble.tne.ai/v1/rerank" },
+            { "key": "http.status_code", "type": "int64", "value": 502 },
+            { "key": "span.kind", "type": "string", "value": "client" },
+            { "key": "error", "type": "string", "value": "true" }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "knowledge",
+          "tags": [
+            { "key": "telemetry.sdk.language", "type": "string", "value": "python" }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "demo-222",
+      "spans": [
+        {
+          "traceID": "demo-222",
+          "spanID": "root-222",
+          "operationName": "on_send_task",
+          "references": [],
+          "startTime": 1746639010000000,
+          "duration": 2200000,
+          "tags": [
+            { "key": "otel.scope.name", "type": "string", "value": "app.task_manager" },
+            { "key": "request_id", "type": "string", "value": "sess-222" },
+            { "key": "span.kind", "type": "string", "value": "internal" }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "demo-222",
+          "spanID": "post-200-222",
+          "operationName": "POST",
+          "references": [
+            { "refType": "CHILD_OF", "traceID": "demo-222", "spanID": "root-222" }
+          ],
+          "startTime": 1746639010500000,
+          "duration": 500000,
+          "tags": [
+            { "key": "http.method", "type": "string", "value": "POST" },
+            { "key": "http.url", "type": "string", "value": "https://ensemble.tne.ai/v1/embeddings" },
+            { "key": "http.status_code", "type": "int64", "value": 200 },
+            { "key": "span.kind", "type": "string", "value": "client" }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "demo-222",
+          "spanID": "post-400-222",
+          "operationName": "POST",
+          "references": [
+            { "refType": "CHILD_OF", "traceID": "demo-222", "spanID": "root-222" }
+          ],
+          "startTime": 1746639010800000,
+          "duration": 700000,
+          "tags": [
+            { "key": "http.method", "type": "string", "value": "POST" },
+            { "key": "http.url", "type": "string", "value": "https://ensemble.tne.ai/v1/chat/completions" },
+            { "key": "http.status_code", "type": "int64", "value": 404 },
+            { "key": "span.kind", "type": "string", "value": "client" },
+            { "key": "error", "type": "string", "value": "true" }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "knowledge",
+          "tags": [
+            { "key": "telemetry.sdk.language", "type": "string", "value": "python" }
+          ]
+        }
+      },
+      "warnings": null
+    }
+  ],
+  "total": 0,
+  "limit": 0,
+  "offset": 0,
+  "errors": null
+}

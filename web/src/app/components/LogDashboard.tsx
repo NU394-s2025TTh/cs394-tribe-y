@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import {
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
   BarChart,
   Bar,
   XAxis,
@@ -7,172 +11,202 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
+  LineChart,
+  Line,
 } from 'recharts';
+import { Home, Database, BarChart2, Settings } from 'lucide-react';
 
-import '../app.module.css'; 
-
-
+/* ───────── Types ───────── */
+interface Tag {
+  key: string;
+  type: string;
+  value: string | number;
+}
 interface Span {
   traceID: string;
   spanID: string;
   operationName: string;
   startTime: number;
-  duration: number; // micro‑seconds
-  tags: {
-    key: string;
-    type: string;
-    value: string | number;
-  }[];
+  duration: number; // μs
+  tags: Tag[];
+}
+interface Trace {
+  traceID: string;
+  spans: Span[];
+}
+export interface LogData {
+  data: Trace[];
 }
 
-interface LogData {
-  data: {
-    traceID: string;
-    spans: Span[];
-    processes: {
-      [key: string]: {
-        serviceName: string;
-        tags: {
-          key: string;
-          type: string;
-          value: string;
-        }[];
-      };
-    };
-  }[];
-}
+const COLORS = [
+  '#3b82f6',
+  '#22c55e',
+  '#f59e42',
+  '#e11d48',
+  '#a21caf',
+  '#0ea5e9',
+  '#fbbf24',
+];
+const percentile = (arr: number[], p: number) => {
+  if (!arr.length) return 0;
+  const sorted = [...arr].sort((a, b) => a - b);
+  return sorted[Math.floor(p * (sorted.length - 1))];
+};
 
-const COLORS = ['#3b82f6', '#22c55e', '#f59e42', '#e11d48', '#a21caf', '#0ea5e9', '#fbbf24'];
+const LogDashboard: React.FC<{ data: LogData | LogData[] }> = ({ data }) => {
+  const [range, setRange] = useState('Last 24 Hours');
 
-const LogDashboard: React.FC<{ data: LogData }> = ({ data }) => {
-  const spans = data.data[0].spans;
+  const logs: LogData[] = useMemo(
+    () => (Array.isArray(data) ? data : [data]),
+    [data]
+  );
+  const spans = useMemo(
+    () => logs.flatMap(log => log.data).flatMap(trace => trace.spans),
+    [logs]
+  );
 
-  /* ────────  Metrics  ──────── */
+  const totalTraces = logs.flatMap(log => log.data).length;
   const totalSpans = spans.length;
-  const avgDuration = spans.reduce((acc, s) => acc + s.duration, 0) / totalSpans; // µs
-
-  /* status‑code distribution */
-  const statusCodes = spans.reduce<Record<string, number>>((acc, span) => {
-    const status = span.tags.find(t => t.key === 'http.status_code')?.value;
-    if (status) acc[status.toString()] = (acc[status.toString()] || 0) + 1;
-    return acc;
-  }, {});
-
-  const statusCodeData = Object.entries(statusCodes).map(([code, count]) => ({
-    name: `Status ${code}`,
-    value: count,
+  const durationsMs = spans.map(s => s.duration / 1_000_000);
+  const avgDuration = totalSpans
+    ? durationsMs.reduce((a, b) => a + b, 0) / totalSpans
+    : 0;
+  const p95 = percentile(durationsMs, 0.95);
+  const statusBuckets = spans.reduce<Record<'2xx' | '4xx' | '5xx' | 'other', number>>(
+    (acc, span) => {
+      const code = span.tags.find(t => t.key === 'http.status_code')?.value as number;
+      if (code >= 200 && code < 300) acc['2xx']++;
+      else if (code >= 400 && code < 500) acc['4xx']++;
+      else if (code >= 500 && code < 600) acc['5xx']++;
+      else acc.other++;
+      return acc;
+    },
+    { '2xx': 0, '4xx': 0, '5xx': 0, other: 0 }
+  );
+  const statusData = (Object.entries(statusBuckets) as [string, number][]).map(
+    ([name, value]) => ({ name: name.toUpperCase(), value })
+  );
+  const errorRate = totalSpans
+    ? ((statusBuckets['4xx'] + statusBuckets['5xx']) / totalSpans) * 100
+    : 0;
+  const opData = Object.entries(
+    spans.reduce<Record<string, number>>((acc, s) => {
+      acc[s.operationName] = (acc[s.operationName] || 0) + 1;
+      return acc;
+    }, {})
+  ).map(([name, value]) => ({ name, value }));
+  const timeline = spans.map((s, idx) => ({
+    name: `${s.spanID.slice(0, 6)}-${idx}`,
+    ms: s.duration / 1_000_000,
   }));
 
-  /* operation distribution */
-  const operations = spans.reduce<Record<string, number>>((acc, span) => {
-    acc[span.operationName] = (acc[span.operationName] || 0) + 1;
-    return acc;
-  }, {});
-
-  const operationData = Object.entries(operations).map(([name, count]) => ({
-    name,
-    value: count,
-  }));
-
-  /* timeline */
-  const timelineData = spans.map((s, i) => ({
-    name: `${s.operationName} #${i + 1}`,
-    duration: s.duration,
-  }));
-
-  /* ────────  UI  ──────── */
   return (
-    <div className="body-bg">
-      <main className="dashboard-main">
-        {/* Title w/ underline */}
-        <div className="top-border">
-          <h1>Log Metrics Dashboard</h1>
-        </div>
+    <div className="dashboard-container">
+      {/* Sidebar */}
+      <aside className="sidebar">
+        {[
+          { Icon: Home, label: 'Home' },
+          { Icon: Database, label: 'Data' },
+          { Icon: BarChart2, label: 'Metrics' },
+          { Icon: Settings, label: 'Settings' },
+        ].map(({ Icon, label }) => (
+          <div key={label} className="icon-group">
+            <Icon className="sidebar-icon" title={label} />
+            <span className="tooltip">{label}</span>
+          </div>
+        ))}
+      </aside>
 
-        {/* Metrics table */}
-        <div className="metrics-wrapper">
-          <table className="metrics-table">
-            <tbody>
-              <tr>
-                <th>Total Spans</th>
-                <td>{totalSpans}</td>
-              </tr>
-              <tr>
-                <th>Average Duration</th>
-                <td>{(avgDuration / 1_000_000).toFixed(2)}ms</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      {/* Main Content */}
+      <main className="main-content">
+        <header className="header">
+          <h1 className="title">Log Metrics Dashboard</h1>
+          <select
+            className="dropdown"
+            value={range}
+            onChange={e => setRange(e.target.value)}
+          >
+            {['Last 24 Hours', 'Last 7 Days', 'Last 30 Days'].map(r => (
+              <option key={r}>{r}</option>
+            ))}
+          </select>
+        </header>
 
-        {/* Charts row */}
-        <div className="charts-row">
-          {/* Pie ─ Status codes */}
-          <div className="dashboard-card">
-            <h3>HTTP Status Code Distribution</h3>
-            <ResponsiveContainer width="100%" height={260}>
+        <section className="kpi-grid">
+          {[
+            { label: 'Traces', value: totalTraces },
+            { label: 'Spans', value: totalSpans },
+            { label: 'Avg Latency', value: `${avgDuration.toFixed(1)} ms` },
+            { label: 'p95 Latency', value: `${p95.toFixed(1)} ms` },
+            { label: 'Error Rate', value: `${errorRate.toFixed(1)}%` },
+          ].map(kpi => (
+            <div key={kpi.label} className="kpi-card">
+              <span className="kpi-label">{kpi.label}</span>
+              <span className="kpi-value">{kpi.value}</span>
+            </div>
+          ))}
+        </section>
+
+        <section className="chart-section">
+          <div className="chart-container">
+            <h2 className="chart-title">HTTP Status Distribution</h2>
+            <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={statusCodeData}
+                  data={statusData}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius={40}
-                  outerRadius={80}
-                  paddingAngle={3}
-                  labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  innerRadius={60}
+                  outerRadius={100}
+                  paddingAngle={4}
+                  label={({ name, percent }) =>
+                    `${name}: ${(percent * 100).toFixed(0)}%`
+                  }
+                  isAnimationActive
+                  animationDuration={800}
                 >
-                  {statusCodeData.map((_, idx) => (
-                    <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
+                  {statusData.map((_, i) => (
+                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip />
-                <Legend />
+                <Tooltip contentClassName="tooltip-content" itemClassName="tooltip-item" />
+                <Legend wrapperClassName="legend" iconType="circle" verticalAlign="bottom" layout="horizontal" />
               </PieChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Bar ─ operations */}
-          <div className="dashboard-card">
-            <h3>Operation Name Distribution</h3>
-            <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={operationData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
-                <XAxis dataKey="name" tick={{ fill: '#334155', fontWeight: 600 }} />
-                <YAxis tick={{ fill: '#334155', fontWeight: 600 }} />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="value" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+          <div className="chart-container">
+            <h2 className="chart-title">Operation Frequency</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={opData} layout="vertical" margin={{ left: 20 }} isAnimationActive>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis type="number" tick={{ fill: '#d1d5db', fontWeight: '600' }} />
+                <YAxis type="category" dataKey="name" tick={{ fill: '#d1d5db', fontWeight: '600' }} />
+                <Tooltip contentClassName="tooltip-content" itemClassName="tooltip-item" />
+                <Bar dataKey="value" fill={COLORS[0]} radius={[0, 8, 8, 0]} isAnimationActive />
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </section>
 
-        {/* Timeline */}
-        <div className="timeline-row">
-          <h3>Span Timeline</h3>
-          <div className="timeline-scroll dashboard-card">
-            <ResponsiveContainer
-              width={timelineData.length > 6 ? timelineData.length * 80 : '100%'}
-              height={240}
-            >
-              <BarChart data={timelineData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
-                <XAxis dataKey="name" tick={{ fill: '#334155', fontWeight: 600 }} />
-                <YAxis tick={{ fill: '#334155', fontWeight: 600 }} />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="duration" fill="#22c55e" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+        <section className="timeline-section">
+          <h2 className="chart-title">Span Latency Timeline (ms)</h2>
+          <div className="timeline-container">
+            <div className="timeline-inner">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={timeline} margin={{ top: 0, bottom: 0, left: 20 }} isAnimationActive>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="name" tick={{ fill: '#d1d5db', fontSize: 10 }} />
+                  <YAxis tick={{ fill: '#d1d5db' }} />
+                  <Tooltip contentClassName="tooltip-content" itemClassName="tooltip-item" />
+                  <Line type="monotone" dataKey="ms" stroke={COLORS[1]} strokeWidth={2} dot={false} isAnimationActive />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </div>
+        </section>
       </main>
     </div>
   );
