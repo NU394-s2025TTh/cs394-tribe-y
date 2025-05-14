@@ -1,29 +1,75 @@
-/* Your styles goes here. */
+/* global frame */
+.body-bg {
+  background: #f7f9fc;
+  min-height: 100vh;
+  padding: 1.5rem;
+  font-family: 'Inter', sans-serif;
+  color: #111827;
+}
 
-.box {
-  width: 200px;
-  height: 200px;
+/* blue bar under the title */
+.top-border {
+  border-bottom: 4px solid #3b82f6;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.top-border h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* metrics table */
+.metrics-wrapper {
+  max-width: 320px;
+  margin-bottom: 1.5rem;
+}
+
+.metrics-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.metrics-table th,
+.metrics-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.metrics-table th {
+  background: #eef2ff;
+  font-weight: 600;
+}
+
+.metrics-table td {
+  background: #ffffff;
+}
+
+.metrics-table tr:not(:last-child) * {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* reusable card shell */
+.dashboard-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+/* flex helpers */
+.metrics-row,
+.charts-row,
+.timeline-row {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px;
-  border-radius: 8px;
-  font-size: 24px;
-  font-weight: bold;
-  color: black;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.yellowBox {
-  background-color: #FFD700;
-}
-
-.orangeBox {
-  background-color: #FFA500;
-}
-
-.boxContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px;
+.dashboard-main {
+  max-width: 1200px;
+  margin: 0 auto;
 }
