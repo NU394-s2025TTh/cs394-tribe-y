@@ -24,8 +24,8 @@ const yellowTeamMembers: TeamMember[] = [
   },
   {
     name: 'Ryan Luedtke',
-    email: 'sampleemail@u.northwestern.edu',
-    picture: 'https://via.placeholder.com/150',
+    email: 'ryanluedtke2026@u.northwestern.edu',
+    picture: 'assets/ryan.jpg',
   },
   {
     name: 'Haipeng Shen',
