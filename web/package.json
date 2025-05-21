@@ -1,5 +1,9 @@
 {
   "name": "@cs394-vite-nx-template/web",
   "version": "0.0.1",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "csvtojson": "^2.0.10",
+    "xlsx": "^0.18.5"
+  }
 }
