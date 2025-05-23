@@ -15,6 +15,7 @@ export const OverviewView: React.FC = () => {
   const outliers = detectOutliers(responseTimes).map(v => v.toFixed(2));
   const warnings = getWarningsWithQuestionContext(jsonData.raw);
   const warningCount = warnings.length;
+  const stepStats = getStepDurations(jsonData.raw);
 
   const handleDownload = () => {
     const dataStr = JSON.stringify(jsonData.raw, null, 2);
@@ -116,7 +117,35 @@ export const OverviewView: React.FC = () => {
               </ul>
             </div>
         </div>
+        
       </div>
+
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors">
+              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">Running Step Durations</h3>
+              <div className="space-y-4">
+                {stepStats.map((stat) => (
+                  <div key={stat.step} className="border-t border-gray-300 dark:border-gray-600 pt-2">
+                    <h4 className="text-md font-semibold text-blue-600 dark:text-blue-400 capitalize">{stat.step}</h4>
+                    <div className="grid grid-cols-3 gap-4 text-sm mt-1">
+                      <div>
+                        <p className="text-gray-500 dark:text-gray-400">Mean (ms)</p>
+                        <p className="text-gray-800 dark:text-white font-medium">{stat.mean.toFixed(2)}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-500 dark:text-gray-400">Median (ms)</p>
+                        <p className="text-gray-800 dark:text-white font-medium">{stat.median.toFixed(2)}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-500 dark:text-gray-400">Outliers (ms)</p>
+                        <p className="text-gray-800 dark:text-white font-medium break-words">
+                          {stat.outliers.length > 0 ? stat.outliers.map(v => v.toFixed(2)).join(', ') : 'None'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
       
 {/*       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-colors">
         <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">Data Structure</h3>
@@ -232,4 +261,56 @@ function getWarningsWithQuestionContext(jsonData: any): WarningInfo[] {
   }
 
   return results;
+}
+
+type StepStats = {
+  step: string;
+  durations: number[];
+  mean: number;
+  median: number;
+  outliers: number[];
+};
+
+const runningStepLabels = [
+  "chat",
+  "DF to MD",
+  "code generator",
+  "ruleset relevanc"
+];
+
+function getStepDurations(jsonData: any): StepStats[] {
+  if (!jsonData?.data) return [];
+
+  const steps: { [key: string]: number[] } = {
+    "chat": [],
+    "DF to MD": [],
+    "code generator": [],
+    "ruleset relevanc": [],
+  };
+
+  for (const trace of jsonData.data) {
+    const spans = [...trace.spans].sort((a, b) => a.startTime - b.startTime); // bottom-up = chronological
+
+    for (let i = 0; i < spans.length - 1; i++) {
+      const curr = spans[i];
+      const next = spans[i + 1];
+
+      const matchedStep = runningStepLabels.find(step =>
+        curr.operationName.toLowerCase().includes(step.toLowerCase())
+      );
+
+      if (matchedStep && curr.startTime && next.startTime) {
+        const duration = (next.startTime - curr.startTime) / 1e6; // convert nanoseconds to milliseconds
+        steps[matchedStep].push(duration);
+      }
+    }
+  }
+
+  return Object.entries(steps).map(([step, durations]) => ({
+    step,
+    durations,
+    mean: calculateMean(durations),
+    median: calculateMedian(durations),
+    outliers: detectOutliers(durations)
+  }));
 }
