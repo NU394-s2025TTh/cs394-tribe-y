@@ -4,7 +4,6 @@ import { FileUploader } from './FileUploader';
 import { OverviewView } from './views/OverviewView';
 import { TableView } from './views/TableView';
 import { ChartView } from './views/ChartView';
-import { TreeView } from './views/TreeView';
 
 export const MainContent: React.FC = () => {
   const { jsonData, currentView } = useJsonData();
@@ -21,8 +20,6 @@ export const MainContent: React.FC = () => {
         return <TableView />;
       case 'charts':
         return <ChartView />;
-      case 'tree':
-        return <TreeView />;
       default:
         return <OverviewView />;
     }

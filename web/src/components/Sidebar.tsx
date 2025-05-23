@@ -1,6 +1,6 @@
 import React from 'react';
 import { useJsonData } from '../context/JsonDataContext';
-import { FileType, BarChart3, Table, GitFork } from 'lucide-react';
+import { FileType, BarChart3, Table } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 interface SidebarProps {
@@ -14,7 +14,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
     { id: 'overview', name: 'Overview', icon: FileType },
     { id: 'table', name: 'Table View', icon: Table },
     { id: 'charts', name: 'Charts', icon: BarChart3 },
-    { id: 'tree', name: 'JSON Tree', icon: GitFork }
   ];
 
   return (
