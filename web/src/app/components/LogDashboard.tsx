@@ -1,4 +1,6 @@
 import React, { useMemo, useState } from 'react';
+import EvaluateAllButton from './EvaluateAllButton';
+import TestMatchButton from './TestMatchButton';
 import {
   ResponsiveContainer,
   PieChart,
@@ -207,6 +209,12 @@ const LogDashboard: React.FC<{ data: LogData | LogData[] }> = ({ data }) => {
             </div>
           </div>
         </section>
+        <section className="llm-section">
+          <h2>🧠 LLM Matcher</h2>
+          <TestMatchButton />
+          <EvaluateAllButton />
+        
+      </section>
       </main>
     </div>
   );
