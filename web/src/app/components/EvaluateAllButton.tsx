@@ -1,9 +1,12 @@
 /// web/src/app/components/EvaluateAllButton.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import extractedQueries from '../../data/extracted_queries.json';
-import expectedAnswers from '../../data/qa_pairs.json';
+import rawExpected from '../../data/qa_pairs.json';
 import { matchQueryToFAQs } from '../../lib/faqMatcher';
 import MatchTable from './MatchTable';
+
+const expectedAnswers: Record<string, string> = rawExpected;
+
 
 export default function EvaluateAllButton() {
   const [results, setResults] = useState<any[]>([]);

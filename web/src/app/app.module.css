@@ -73,3 +73,57 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+
+/* LLM matcher layout */
+.llm-section {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.llm-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  border-bottom: 2px solid #3b82f6;
+  padding-bottom: 0.5rem;
+}
+
+.llm-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.eval-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.eval-table th,
+.eval-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.eval-table th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #111827;
+}
+
+.eval-table td {
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+.eval-block p {
+  font-weight: 500;
+  margin: 0.5rem 0 0.75rem;
+}
+

@@ -1,4 +1,6 @@
-import faqs from '../data/qa_pairs.json';
+import rawFaqs from '../data/qa_pairs.json';
+
+const faqs: Record<string, string> = rawFaqs;
 
 export async function matchQueryToFAQs(query: string) {
   const corpus = Object.keys(faqs);
@@ -14,8 +16,9 @@ export async function matchQueryToFAQs(query: string) {
   return {
     question: data.matched,
     similarity: data.score,
-    answer: faqs[data.matched as keyof typeof faqs],
+    answer: faqs[data.matched], // ✅ 没问题
   };
 }
+
 
 
