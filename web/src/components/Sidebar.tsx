@@ -14,6 +14,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
     { id: 'overview', name: 'Overview', icon: FileType },
     { id: 'table', name: 'Table View', icon: Table },
     { id: 'charts', name: 'Charts', icon: BarChart3 },
+    { id: 'qa', name: 'QA Matching', icon: FileType },
   ];
 
   return (

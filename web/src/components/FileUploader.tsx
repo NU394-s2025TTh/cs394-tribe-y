@@ -80,7 +80,7 @@ export const FileUploader: React.FC = () => {
           !isDragActive && "border-gray-300 dark:border-gray-700"
         )}
       >
-        <input {...getInputProps()} />
+        <input {...(getInputProps() as React.InputHTMLAttributes<HTMLInputElement>)} />
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <Upload className="h-12 w-12 text-gray-400 dark:text-gray-500" />
           {isDragActive ? (

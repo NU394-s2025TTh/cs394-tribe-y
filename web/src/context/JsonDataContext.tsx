@@ -1,5 +1,13 @@
 import React, { createContext, useContext, useState } from 'react';
 
+export interface ExtractedQA {
+  query: string;
+  answer: string;
+  traceId: string;
+  responseTimeMs: number;
+  completed: boolean;
+}
+
 export interface JsonMetadata {
   fileName: string;
   fileSize: string;
@@ -16,6 +24,7 @@ export interface ProcessedJsonData {
   raw: any;
   metadata?: JsonMetadata;
   structure?: JsonDataStructure;
+  qaPairs?: { query: string; answer: string }[];
 }
 
 interface JsonDataContextType {
