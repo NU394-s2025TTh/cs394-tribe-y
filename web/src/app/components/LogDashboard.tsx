@@ -63,20 +63,23 @@ const LogDashboard: React.FC<{ data: LogData | LogData[] }> = ({ data }) => {
     [data]
   );
   const spans = useMemo(
-    () => logs.flatMap(log => log.data).flatMap(trace => trace.spans),
+    () => logs.flatMap((log) => log.data).flatMap((trace) => trace.spans),
     [logs]
   );
 
-  const totalTraces = logs.flatMap(log => log.data).length;
+  const totalTraces = logs.flatMap((log) => log.data).length;
   const totalSpans = spans.length;
-  const durationsMs = spans.map(s => s.duration / 1_000_000);
+  const durationsMs = spans.map((s) => s.duration / 1_000_000);
   const avgDuration = totalSpans
     ? durationsMs.reduce((a, b) => a + b, 0) / totalSpans
     : 0;
   const p95 = percentile(durationsMs, 0.95);
-  const statusBuckets = spans.reduce<Record<'2xx' | '4xx' | '5xx' | 'other', number>>(
+  const statusBuckets = spans.reduce<
+    Record<'2xx' | '4xx' | '5xx' | 'other', number>
+  >(
     (acc, span) => {
-      const code = span.tags.find(t => t.key === 'http.status_code')?.value as number;
+      const code = span.tags.find((t) => t.key === 'http.status_code')
+        ?.value as number;
       if (code >= 200 && code < 300) acc['2xx']++;
       else if (code >= 400 && code < 500) acc['4xx']++;
       else if (code >= 500 && code < 600) acc['5xx']++;
@@ -126,22 +129,22 @@ const LogDashboard: React.FC<{ data: LogData | LogData[] }> = ({ data }) => {
           <select
             className="dropdown"
             value={range}
-            onChange={e => setRange(e.target.value)}
+            onChange={(e) => setRange(e.target.value)}
           >
-            {['Last 24 Hours', 'Last 7 Days', 'Last 30 Days'].map(r => (
+            {['Last 24 Hours', 'Last 7 Days', 'Last 30 Days'].map((r) => (
               <option key={r}>{r}</option>
             ))}
           </select>
         </header>
 
-        <section className="kpi-grid">
+        <section className="kpi-grid" aria-label="KPI Grid">
           {[
             { label: 'Traces', value: totalTraces },
             { label: 'Spans', value: totalSpans },
             { label: 'Avg Latency', value: `${avgDuration.toFixed(1)} ms` },
             { label: 'p95 Latency', value: `${p95.toFixed(1)} ms` },
             { label: 'Error Rate', value: `${errorRate.toFixed(1)}%` },
-          ].map(kpi => (
+          ].map((kpi) => (
             <div key={kpi.label} className="kpi-card">
               <span className="kpi-label">{kpi.label}</span>
               <span className="kpi-value">{kpi.value}</span>
@@ -173,8 +176,16 @@ const LogDashboard: React.FC<{ data: LogData | LogData[] }> = ({ data }) => {
                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentClassName="tooltip-content" itemClassName="tooltip-item" />
-                <Legend wrapperClassName="legend" iconType="circle" verticalAlign="bottom" layout="horizontal" />
+                <Tooltip
+                  contentClassName="tooltip-content"
+                  itemClassName="tooltip-item"
+                />
+                <Legend
+                  wrapperClassName="legend"
+                  iconType="circle"
+                  verticalAlign="bottom"
+                  layout="horizontal"
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -182,12 +193,32 @@ const LogDashboard: React.FC<{ data: LogData | LogData[] }> = ({ data }) => {
           <div className="chart-container">
             <h2 className="chart-title">Operation Frequency</h2>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={opData} layout="vertical" margin={{ left: 20 }} isAnimationActive>
+              <BarChart
+                data={opData}
+                layout="vertical"
+                margin={{ left: 20 }}
+                isAnimationActive
+              >
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis type="number" tick={{ fill: '#d1d5db', fontWeight: '600' }} />
-                <YAxis type="category" dataKey="name" tick={{ fill: '#d1d5db', fontWeight: '600' }} />
-                <Tooltip contentClassName="tooltip-content" itemClassName="tooltip-item" />
-                <Bar dataKey="value" fill={COLORS[0]} radius={[0, 8, 8, 0]} isAnimationActive />
+                <XAxis
+                  type="number"
+                  tick={{ fill: '#d1d5db', fontWeight: '600' }}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  tick={{ fill: '#d1d5db', fontWeight: '600' }}
+                />
+                <Tooltip
+                  contentClassName="tooltip-content"
+                  itemClassName="tooltip-item"
+                />
+                <Bar
+                  dataKey="value"
+                  fill={COLORS[0]}
+                  radius={[0, 8, 8, 0]}
+                  isAnimationActive
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -198,12 +229,29 @@ const LogDashboard: React.FC<{ data: LogData | LogData[] }> = ({ data }) => {
           <div className="timeline-container">
             <div className="timeline-inner">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={timeline} margin={{ top: 0, bottom: 0, left: 20 }} isAnimationActive>
+                <LineChart
+                  data={timeline}
+                  margin={{ top: 0, bottom: 0, left: 20 }}
+                  isAnimationActive
+                >
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="name" tick={{ fill: '#d1d5db', fontSize: 10 }} />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fill: '#d1d5db', fontSize: 10 }}
+                  />
                   <YAxis tick={{ fill: '#d1d5db' }} />
-                  <Tooltip contentClassName="tooltip-content" itemClassName="tooltip-item" />
-                  <Line type="monotone" dataKey="ms" stroke={COLORS[1]} strokeWidth={2} dot={false} isAnimationActive />
+                  <Tooltip
+                    contentClassName="tooltip-content"
+                    itemClassName="tooltip-item"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="ms"
+                    stroke={COLORS[1]}
+                    strokeWidth={2}
+                    dot={false}
+                    isAnimationActive
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -213,8 +261,7 @@ const LogDashboard: React.FC<{ data: LogData | LogData[] }> = ({ data }) => {
           <h2>🧠 LLM Matcher</h2>
           <TestMatchButton />
           <EvaluateAllButton />
-        
-      </section>
+        </section>
       </main>
     </div>
   );

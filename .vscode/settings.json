@@ -6,5 +6,6 @@
     "homescreen",
     "Kayango",
     "toddwseattle"
-  ]
+  ],
+  "github.copilot.testGenerationInstructions": ".github/copilot-test-instructions.md"
 }
