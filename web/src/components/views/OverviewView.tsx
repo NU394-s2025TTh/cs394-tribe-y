@@ -5,23 +5,34 @@ import { DownloadIcon, ClipboardCopy } from 'lucide-react';
 
 export const OverviewView: React.FC = () => {
   const { jsonData } = useJsonData();
-
   if (!jsonData) return null;
 
-  const responseTimes = extractResponseTimes(jsonData.raw);
+  // flatten to an array of log entries
+  const logs: any[] = Array.isArray(jsonData.raw)
+    ? jsonData.raw
+    : Array.isArray(jsonData.raw.data)
+    ? jsonData.raw.data
+    : [];
+
+  // overall response‐time metrics
+  const responseTimes = extractResponseTimes(logs);
   const mean = calculateMean(responseTimes).toFixed(2);
   const median = calculateMedian(responseTimes).toFixed(2);
-  const queryCount = countUserQueries(jsonData.raw);
+  const queryCount = countUserQueries(logs);
   const outliers = detectOutliers(responseTimes).map(v => v.toFixed(2));
-  const warnings = getWarningsWithQuestionContext(jsonData.raw);
-  const warningCount = warnings.length;
-  const stepStats = getStepDurations(jsonData.raw);
 
+  // warnings/context
+  const warnings = getWarningsWithQuestionContext(logs);
+  const warningCount = warnings.length;
+
+  // per–“Running step” durations
+  const stepStats = getStepDurations(logs);
+
+  // download & copy
   const handleDownload = () => {
-    const dataStr = JSON.stringify(jsonData.raw, null, 2);
+    const dataStr = JSON.stringify(logs, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
-    
     const link = document.createElement('a');
     link.href = url;
     link.download = `${jsonData.metadata?.fileName || 'data'}.json`;
@@ -31,14 +42,14 @@ export const OverviewView: React.FC = () => {
   };
 
   const handleCopyToClipboard = () => {
-    const dataStr = JSON.stringify(jsonData.raw, null, 2);
-    navigator.clipboard.writeText(dataStr)
+    navigator.clipboard.writeText(JSON.stringify(logs, null, 2))
       .then(() => alert('JSON copied to clipboard!'))
       .catch(err => console.error('Failed to copy: ', err));
   };
 
   return (
     <div className="space-y-6 animate-fadeIn">
+      {/* Header */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Overview</h2>
         <div className="flex space-x-2">
@@ -58,7 +69,8 @@ export const OverviewView: React.FC = () => {
           </button>
         </div>
       </div>
-      
+
+      {/* File Information */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors">
           <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">File Information</h3>
@@ -83,81 +95,81 @@ export const OverviewView: React.FC = () => {
         </div>
       </div>
 
+      {/* Query Statistics */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors">
         <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">Query Statistics</h3>
         <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Total User Queries</p>
-              <p className="text-gray-800 dark:text-white font-medium">{queryCount}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Mean Response Time (s)</p>
-              <p className="text-gray-800 dark:text-white font-medium">{mean}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Median Response Time (s)</p>
-              <p className="text-gray-800 dark:text-white font-medium">{median}</p>
-            </div>
-            <div className="col-span-2">
-              <p className="text-sm text-gray-500 dark:text-gray-400">Outlier Response Times (±2σ)</p>
-              <p className="text-gray-800 dark:text-white font-medium break-words">{outliers.length > 0 ? outliers.join(', ') : '0'}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Warnings (Severity = WARN)</p>
-              <p className="text-gray-800 dark:text-white font-medium">{warningCount}</p>
-            </div>
-            <div className="col-span-2">
-              <p className="text-sm text-gray-500 dark:text-gray-400">User Questions with Warnings</p>
-              <ul className="text-gray-800 dark:text-white text-sm list-disc list-inside space-y-1 max-h-32 overflow-y-auto">
-                {warnings.map((warn, i) => (
-                  <li key={i}>
-                    {warn.userQuestion ? warn.userQuestion : <span className="italic text-gray-500">Unknown user question</span>}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Total User Queries</p>
+            <p className="text-gray-800 dark:text-white font-medium">{queryCount}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Mean Response Time (s)</p>
+            <p className="text-gray-800 dark:text-white font-medium">{mean}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Median Response Time (s)</p>
+            <p className="text-gray-800 dark:text-white font-medium">{median}</p>
+          </div>
+          <div className="col-span-2">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Outlier Response Times (±2σ)</p>
+            <p className="text-gray-800 dark:text-white font-medium break-words">{outliers.length ? outliers.join(', ') : 'None'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Warnings (Severity = WARN)</p>
+            <p className="text-gray-800 dark:text-white font-medium">{warningCount}</p>
+          </div>
+          <div className="col-span-2">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              User Questions with Warnings
+            </p>
+            <ol className="text-gray-800 dark:text-white text-sm list-decimal list-inside space-y-1 max-h-32 overflow-y-auto">
+              {warnings.map((w, i) => (
+                <li key={i}>
+                  <span className="font-semibold">(trace id) {w.traceId}</span>: {w.question ?? '—'}
+                </li>
+              ))}
+            </ol>
+          </div>
+
         </div>
-        
       </div>
 
+      {/* Running Step Durations */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors">
-              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">Running Step Durations</h3>
-              <div className="space-y-4">
-                {stepStats.map((stat) => (
-                  <div key={stat.step} className="border-t border-gray-300 dark:border-gray-600 pt-2">
-                    <h4 className="text-md font-semibold text-blue-600 dark:text-blue-400 capitalize">{stat.step}</h4>
-                    <div className="grid grid-cols-3 gap-4 text-sm mt-1">
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400">Mean (ms)</p>
-                        <p className="text-gray-800 dark:text-white font-medium">{stat.mean.toFixed(2)}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400">Median (ms)</p>
-                        <p className="text-gray-800 dark:text-white font-medium">{stat.median.toFixed(2)}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400">Outliers (ms)</p>
-                        <p className="text-gray-800 dark:text-white font-medium break-words">
-                          {stat.outliers.length > 0 ? stat.outliers.map(v => v.toFixed(2)).join(', ') : 'None'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+        <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">Sub-query (Running) Step Durations</h3>
+        <div className="space-y-4">
+          {stepStats.map(stat => (
+            <div key={stat.step} className="border-t border-gray-300 dark:border-gray-600 pt-2">
+              <h4 className="text-md font-semibold text-blue-600 dark:text-blue-400 capitalize">{stat.step}</h4>
+              <div className="grid grid-cols-3 gap-4 text-sm mt-1">
+                <div>
+                  <p className="text-gray-500 dark:text-gray-400">Mean (ms)</p>
+                  <p className="text-gray-800 dark:text-white font-medium">{stat.mean.toFixed(2)}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 dark:text-gray-400">Median (ms)</p>
+                  <p className="text-gray-800 dark:text-white font-medium">{stat.median.toFixed(2)}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 dark:text-gray-400">Outliers (ms)</p>
+                  <p className="text-gray-800 dark:text-white font-medium break-words">
+                    {stat.outliers.length > 0 ? stat.outliers.map(v => v.toFixed(2)).join(', ') : 'None'}
+                  </p>
+                </div>
               </div>
             </div>
-      
-{/*       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-colors">
-        <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">Data Structure</h3>
-        <StructureSummary structure={jsonData.structure} />
-      </div> */}
-      
+          ))}
+        </div>
+      </div>
+
+      {/* Preview */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-colors">
         <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">Preview</h3>
         <div className="overflow-auto max-h-96">
           <pre className="text-sm text-gray-700 dark:text-gray-300 font-mono leading-relaxed p-4 bg-gray-50 dark:bg-gray-900 rounded-md">
-            {JSON.stringify(jsonData.raw, null, 2).slice(0, 1000)}
-            {JSON.stringify(jsonData.raw, null, 2).length > 1000 ? '...' : ''}
+            {JSON.stringify(logs, null, 2).slice(0, 1000)}
+            {JSON.stringify(logs, null, 2).length > 1000 ? '...' : ''}
           </pre>
         </div>
       </div>
@@ -165,31 +177,21 @@ export const OverviewView: React.FC = () => {
   );
 };
 
+// ─── Helper Functions ───────────────────────────────────────────────────────────
 
-
-// ----Helper Functions----
-
-function extractResponseTimes(jsonData: any): number[] {
-  const times: number[] = [];
-
-  if (!jsonData?.data) return times;
-
-  for (const trace of jsonData.data) {
-    for (const span of trace.spans) {
-      const opName: string = span.operationName;
-      const match = opName.match(/Response time: (\d+\.\d+)/);
-      if (match) {
-        times.push(parseFloat(match[1]));
-      }
-    }
-  }
-
-  return times;
+function extractResponseTimes(logs: any[]): number[] {
+  return logs
+    .map(e => {
+      const m = typeof e.body === 'string' && e.body.match(/Response time: (\d+\.\d+)/);
+      return m ? parseFloat(m[1]) : null;
+    })
+    .filter((n): n is number => n !== null);
 }
 
 function calculateMean(values: number[]): number {
-  if (values.length === 0) return 0;
-  return values.reduce((sum, val) => sum + val, 0) / values.length;
+  return values.length === 0
+    ? 0
+    : values.reduce((sum, val) => sum + val, 0) / values.length;
 }
 
 function calculateMedian(values: number[]): number {
@@ -201,64 +203,53 @@ function calculateMedian(values: number[]): number {
     : sorted[mid];
 }
 
-function countUserQueries(jsonData: any): number {
-  if (!jsonData?.data) return 0;
-
-  let count = 0;
-  for (const trace of jsonData.data) {
-    for (const span of trace.spans) {
-      if (span.operationName.includes("Query from user")) {
-        count += 1;
-      }
+function countUserQueries(logs: any[]): number {
+  const ids = new Set<string>();
+  logs.forEach(e => {
+    if (typeof e.body === 'string' && e.body.includes('Query from user') && e.trace_id) {
+      ids.add(e.trace_id);
     }
-  }
-
-  return count;
+  });
+  return ids.size;
 }
 
 function detectOutliers(values: number[]): number[] {
   if (values.length === 0) return [];
-
   const mean = calculateMean(values);
-  const stdDev = Math.sqrt(values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length);
+  const stdDev = Math.sqrt(
+    values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / values.length
+  );
   const lower = mean - 2 * stdDev;
   const upper = mean + 2 * stdDev;
-
-  return values.filter(val => val < lower || val > upper);
+  return values.filter(v => v < lower || v > upper);
 }
 
 type WarningInfo = {
-  userQuestion?: string;
-  warningSpanID: string;
+  traceId?: string;
+  question?: string;
 };
 
-function getWarningsWithQuestionContext(jsonData: any): WarningInfo[] {
+function getWarningsWithQuestionContext(logs: any[]): WarningInfo[] {
   const results: WarningInfo[] = [];
+  let lastContextQuery: string | undefined;
+  let lastTraceId: string | undefined;
 
-  if (!jsonData?.data) return results;
-
-  for (const trace of jsonData.data) {
-    let lastQuestionOp: string | undefined = undefined;
-
-    for (const span of trace.spans) {
-      // Track the most recent LLM question
-      if (span.operationName.includes("Received question")) {
-        lastQuestionOp = span.operationName;
-      }
-
-      // Check if this span is a warning
-      const isWarn = span.tags?.some(
-        (tag: any) => tag.key === "severity_text" && tag.value === "WARN"
-      );
-
-      if (isWarn) {
-        results.push({
-          userQuestion: lastQuestionOp,
-          warningSpanID: span.spanID,
-        });
-      }
+  logs.forEach(e => {
+    // whenever we hit the "Received question" span, grab its Context query
+    if (typeof e.body === 'string' && e.body.includes('Received question')) {
+      lastTraceId = e.trace_id;
+      const ctxMatch = e.body.match(/\[Context query:\s*([^\]]+)\]/);
+      lastContextQuery = ctxMatch ? ctxMatch[1] : undefined;
     }
-  }
+
+    // when we see a WARN, emit the last context + trace
+    if (e.severity_text === 'WARN') {
+      results.push({
+        traceId: e.trace_id || lastTraceId,
+        question: lastContextQuery,
+      });
+    }
+  });
 
   return results;
 }
@@ -271,46 +262,35 @@ type StepStats = {
   outliers: number[];
 };
 
-const runningStepLabels = [
-  "chat",
-  "DF to MD",
-  "code generator",
-  "ruleset relevanc"
-];
+function getStepDurations(logs: any[]): StepStats[] {
+  // 1) extract only those entries whose body ends in "Running step: X"
+  const events = logs
+    .map(e => {
+      if (typeof e.body !== 'string') return null;
+      const m = e.body.match(/Running step: (.+)$/);
+      return m ? { step: m[1], t: e.timestamp } : null;
+    })
+    .filter((e): e is { step: string; t: number } => e !== null)
+    .sort((a, b) => a.t - b.t);
 
-function getStepDurations(jsonData: any): StepStats[] {
-  if (!jsonData?.data) return [];
-
-  const steps: { [key: string]: number[] } = {
-    "chat": [],
-    "DF to MD": [],
-    "code generator": [],
-    "ruleset relevanc": [],
-  };
-
-  for (const trace of jsonData.data) {
-    const spans = [...trace.spans].sort((a, b) => a.startTime - b.startTime); // bottom-up = chronological
-
-    for (let i = 0; i < spans.length - 1; i++) {
-      const curr = spans[i];
-      const next = spans[i + 1];
-
-      const matchedStep = runningStepLabels.find(step =>
-        curr.operationName.toLowerCase().includes(step.toLowerCase())
-      );
-
-      if (matchedStep && curr.startTime && next.startTime) {
-        const duration = (next.startTime - curr.startTime) / 1e6; // convert nanoseconds to milliseconds
-        steps[matchedStep].push(duration);
-      }
-    }
+  // 2) bucket durations by step
+  const buckets: Record<string, number[]> = {};
+  for (let i = 0; i < events.length - 1; i++) {
+    const curr = events[i];
+    const next = events[i + 1];
+    // diff in seconds → convert to ms
+    const durMs = (next.t - curr.t) * 1000;
+    buckets[curr.step] = buckets[curr.step] || [];
+    buckets[curr.step].push(durMs);
   }
 
-  return Object.entries(steps).map(([step, durations]) => ({
+  // 3) compute stats for each
+  return Object.entries(buckets).map(([step, durations]) => ({
     step,
     durations,
     mean: calculateMean(durations),
     median: calculateMedian(durations),
-    outliers: detectOutliers(durations)
+    outliers: detectOutliers(durations),
   }));
 }
+
