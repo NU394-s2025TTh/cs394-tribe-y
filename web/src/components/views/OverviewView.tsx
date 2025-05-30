@@ -137,7 +137,7 @@ export const OverviewView: React.FC = () => {
 
       {/* Running Step Durations */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors">
-        <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">Sub-query (Running) Step Durations</h3>
+        <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">Sub-query (Running) Step Statistics</h3>
         <div className="space-y-4">
           {stepStats.map(stat => (
             <div key={stat.step} className="border-t border-gray-300 dark:border-gray-600 pt-2">
@@ -263,7 +263,7 @@ type StepStats = {
 };
 
 function getStepDurations(logs: any[]): StepStats[] {
-  // 1) extract only those entries whose body ends in "Running step: X"
+  // extract only those entries whose body ends in "Running step: X"
   const events = logs
     .map(e => {
       if (typeof e.body !== 'string') return null;
@@ -273,7 +273,7 @@ function getStepDurations(logs: any[]): StepStats[] {
     .filter((e): e is { step: string; t: number } => e !== null)
     .sort((a, b) => a.t - b.t);
 
-  // 2) bucket durations by step
+  // bucket durations by step
   const buckets: Record<string, number[]> = {};
   for (let i = 0; i < events.length - 1; i++) {
     const curr = events[i];
@@ -284,7 +284,7 @@ function getStepDurations(logs: any[]): StepStats[] {
     buckets[curr.step].push(durMs);
   }
 
-  // 3) compute stats for each
+  // compute stats for each
   return Object.entries(buckets).map(([step, durations]) => ({
     step,
     durations,
