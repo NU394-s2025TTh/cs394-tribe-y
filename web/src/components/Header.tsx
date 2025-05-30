@@ -1,6 +1,7 @@
 import React from 'react';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useJsonData } from '../context/JsonDataContext';
 import { cn } from '../lib/utils';
 
 interface HeaderProps {
@@ -10,23 +11,26 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
   const { theme, toggleTheme } = useTheme();
+  const { jsonData } = useJsonData();
   
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between bg-white dark:bg-gray-800 px-4 shadow-sm transition-colors duration-300">
       <div className="flex items-center">
-        <button 
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 mr-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-          aria-label="Toggle sidebar"
-        >
-          {sidebarOpen ? (
-            <X className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-          ) : (
-            <Menu className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-          )}
-        </button>
+        {jsonData && (
+          <button 
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 mr-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+            aria-label="Toggle sidebar"
+          >
+            {sidebarOpen ? (
+              <X className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            ) : (
+              <Menu className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            )}
+          </button>
+        )}
         <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
-          <span className="text-blue-600 dark:text-blue-400">JSON</span> Visualizer
+          <span className="text-blue-600 dark:text-blue-400">TNE.ai</span> Dashboard
         </h1>
       </div>
       <div className="flex items-center space-x-4">

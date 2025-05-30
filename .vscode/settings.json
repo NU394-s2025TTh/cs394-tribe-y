@@ -6,5 +6,6 @@
     "homescreen",
     "Kayango",
     "toddwseattle"
-  ]
+  ],
+  "nxConsole.generateAiAgentRules": true
 }

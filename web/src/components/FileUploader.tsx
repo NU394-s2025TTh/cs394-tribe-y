@@ -62,10 +62,10 @@ export const FileUploader: React.FC = () => {
       <div className="text-center mb-8">
         <FileJson className="h-16 w-16 mx-auto text-blue-600 dark:text-blue-400 mb-4" />
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          JSON Visualizer Dashboard
+          TNE.ai Dashboard
         </h1>
         <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto">
-          Upload a JSON file to automatically visualize and explore your data in multiple formats.
+          Upload your AI-model metrics JSON to visualize performance insights.
         </p>
       </div>
       
