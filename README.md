@@ -8,7 +8,6 @@ The platform collects and analyzes system logs, metrics, and error messages to p
 
 <img src="images/Screenshot of Running App.png">
 
-<img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45">
 <a href="https://cs394-tribe-y-79383.web.app/">Link to Deployed App</a>
 <a href="https://github.com/orgs/NU394-s2025TTh/projects/8">Link to Backlog</a>
 
