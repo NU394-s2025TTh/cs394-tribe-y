@@ -6,6 +6,8 @@ A dynamic web application designed for ML operations teams and AI engineers, off
 
 The platform collects and analyzes system logs, metrics, and error messages to provide a comprehensive view of model behavior across deployments. TNE.ai turns scattered low-level data into clear insights, helping teams quickly identify issues and improve system reliability.
 
+<img src="images/Screenshot of Running App.png">
+
 <img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45">
 <a href="https://cs394-tribe-y-79383.web.app/">Link to Deployed App</a>
 <a href="https://github.com/orgs/NU394-s2025TTh/projects/8">Link to Backlog</a>
