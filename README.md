@@ -1,29 +1,121 @@
-# CS 394 Template NX Repo
+# TNE.ai Dashboard - CS 394 Spring 2025
+## Project Overview
 
-# PROJECT BACKLOG: https://github.com/orgs/NU394-s2025TTh/projects/8/views/1?filterQuery=&layout=board
+A dynamic web application designed for ML operations teams and AI engineers, offering powerful tools to monitor the performance of multiple AI models. 
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+The platform collects and analyzes system logs, metrics, and error messages to provide a comprehensive view of model behavior across deployments. TNE.ai turns scattered low-level data into clear insights, helping teams quickly identify issues and improve system reliability.
 
-✨ This is an empty [Nx workspace](https://nx.dev) for your tribe to populate ✨.
+<img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45">
+<a href="https://cs394-tribe-y-79383.web.app/">Link to Deployed App</a>
+<a href="https://github.com/orgs/NU394-s2025TTh/projects/8">Link to Backlog</a>
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/tutorials/2-react-monorepo/1r-introduction/1-welcome?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## How to Use TNE.ai Dashboard
 
-## Contents
+1. Upload a json file of the logs (e.g., log_data.json). The log metrics should now be visible
+2. To view model accuracy, you must download the 'server' directory from the repository
+3. Open cmd and 'cd' into 'server' directory
+4. Run 'pip install -r requirements.txt'
+5. Run 'uvicorn app:app --reload'. This should start the local LLM that will do the fuzzy matching.
+6. Navigate to 'QA Matching' on the TNE.ai Dashboard, click 'Run LLM Match', then click 'Evaluate All Queries'. The TNE.ai model accuracy should now be displayed.
+7. To view charts/graphs of the log_data.json contents and metrics, navigate to 'Charts' on the TNE.ai Dashboard
+8. Adjust the X-axis and Y-axis fields to display desired metrics.
 
-This workspace does not contain any applications or libraries. It is a blank slate for you to build upon. It does have the template documents for helping describe the work process of your tribe and teams. All of them in are in the [`docs`](docs) folder. You can add your own documents to this folder as well. The [Home](docs/Home.md) document is the main page for your tribe. You can add links to other documents in this folder to help describe your work process.
+## Directory Structure (Important Files Only):
+└── nu394-s2025tth-cs394-tribe-y/
+    ├── README.md
+    ├── server/
+    │   ├── app.py
+    │   ├── config.py
+    │   ├── requirements.txt
+    │   ├── .env
+    ├── web/
+    │   ├── eslint.config.js
+    │   ├── index.html
+    │   ├── package.json
+    │   ├── postcss.config.js
+    │   ├── tailwind.config.js
+    │   ├── tsconfig.app.json
+    │   ├── tsconfig.json
+    │   ├── tsconfig.node.json
+    │   ├── vite.config.ts
+    │   ├── public/
+    │   │   └── data/
+    │   │       ├── echo_acceptance_tests.xlsx
+    │   │       └── log_data.csv
+    │   ├── scripts/
+    │   │   ├── convert-faqs.ts
+    │   │   ├── extract-converted-queries.cjs
+    │   │   ├── extract-queries.cjs
+    │   │   └── extract-queries.ts
+    │   └── src/
+    │       ├── App.tsx
+    │       ├── index.css
+    │       ├── main.tsx
+    │       ├── vite-env.d.ts
+    │       ├── components/
+    │       │   ├── Dashboard.tsx
+    │       │   ├── FileUploader.tsx
+    │       │   ├── Header.tsx
+    │       │   ├── MainContent.tsx
+    │       │   ├── Sidebar.tsx
+    │       │   ├── QA_components/
+    │       │   │   ├── EvaluateAllButton.tsx
+    │       │   │   ├── MatchTable.tsx
+    │       │   │   ├── qaStyles.module.css
+    │       │   │   └── TestMatchButton.tsx
+    │       │   ├── views/
+    │       │   │   ├── ChartView.tsx
+    │       │   │   ├── OverviewView.tsx
+    │       │   │   ├── QAView.tsx
+    │       │   │   └── TableView.tsx
+    │       │   └── visualizations/
+    │       │       └── StructureSummary.tsx
+    │       ├── context/
+    │       │   ├── JsonDataContext.tsx
+    │       │   └── ThemeContext.tsx
+    │       ├── data/
+    │       │   ├── converted_log.json
+    │       │   ├── extracted_queries.json
+    │       │   ├── faqs_dict.json
+    │       │   ├── log_data.json
+    │       │   └── qa_pairs.json
+    │       ├── lib/
+    │       │   ├── extractQAFromLog.ts
+    │       │   ├── faqMatcher.ts
+    │       │   └── utils.ts
+    │       └── orange-docs/
+    │           ├── Backlog/
+    │           │   ├── Scenarios/
+    │           │   │   └── test.md
+    │           │   ├── Stories/
+    │           │   │   └── visualize_response_time.md
+    │           │   └── Workitems/
+    │           │       └── test.md
+    │           └── Workitems/
+    │               └── response_time_summary_workitems.md
+
+## Other Documentation:
+Documentation including naming, development, organization practices, etc. are located in /docs/
 
 ## Getting started
 
-I recommend using degit to make a copy of this repository. This will create a new directory with the contents of this repository without taking its git history. Run the following command to create a new directory with the contents of this repository:
+Clone the repository:
 
+SSH:
 ```sh
-npx degit https://github.com/toddwseattle/cs394-nx-template-2025.git <your-project-name>
+git clone git@github.com:NU394-s2025TTh/cs394-tribe-y.git
 ```
 
-Then, navigate to the new directory:
+HTTPS:
+```sh
+git clone https://github.com/NU394-s2025TTh/cs394-tribe-y.git
+```
+
+## Run the development server
+Then, navigate to the cloned repository's directory:
 
 ```sh
-cd <your-project-name>
+cd cs394-tribe-y
 ```
 
 To get started, run the following command to install the dependencies:
@@ -32,40 +124,10 @@ To get started, run the following command to install the dependencies:
 npm install
 ```
 
-and initialize the git repository:
-
-```sh
-git init
-```
-
-applications can be add using
-
-```sh
-npx nx g @nx/react:app <application name>
-```
-
-or libraries can be added using
-
-```sh
-npx nx g @nx/react:lib <library name>
-```
-
-The monorepo provides a way to share code between applications and libraries. You can add shared code to the `libs` folder. This is a great way to share code between applications and libraries. As you develop servers to go along with your react frontend, you can add them to the `apps` folder as well. This is a great way to keep your code organized and easy to maintain. You can share libraries between front end apps and backend apps as well; assuming they don't have conflicting dependencies. This is a great way to keep your code organized and easy to maintain.
-
-## Run the development server
-
-## Run tasks
-
 To run the dev server for your app, use:
 
 ```sh
 npx nx serve <application name>
-```
-
-To create a production bundle:
-
-```sh
-npx nx build <application name>
 ```
 
 To see all available targets to run for a project, run:
@@ -74,84 +136,7 @@ To see all available targets to run for a project, run:
 npx nx show project <application name>
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the nx docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/react:app demo
-```
-
-To generate a new library, use:
-
-```sh
-npx nx g @nx/react:lib my-lib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-There are also plugins to help with things like firebase. For example, firebase functions has a plugin that can be used to help with creating and deploying functions. You can find a useful plugin [here](https://github.com/simondotm/nx-firebase).
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Set up CI!
-
-NX makes it easy to setup continuous integration (CI) for your workspace. It provides a command to connect to [Nx Cloud](https://nx.dev/nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects), which is a cloud-based service that provides caching and distributed task execution. This can significantly speed up your CI pipeline.
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/tutorials/2-react-monorepo/1r-introduction/1-welcome?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+This project uses locally-hosted LLMs to conduct fuzzy matching for QA pairs. Please refer to the "How to use TNE.ai Dashboard" for initialization/set-up instructions.
 
 ## Files in this project
 
