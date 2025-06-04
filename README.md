@@ -1,7 +1,8 @@
 # TNE.ai Dashboard - CS 394 Spring 2025
+
 ## Project Overview
 
-A dynamic web application designed for ML operations teams and AI engineers, offering powerful tools to monitor the performance of multiple AI models. 
+A dynamic web application designed for ML operations teams and AI engineers, offering powerful tools to monitor the performance of multiple AI models.
 
 The platform collects and analyzes system logs, metrics, and error messages to provide a comprehensive view of model behavior across deployments. TNE.ai turns scattered low-level data into clear insights, helping teams quickly identify issues and improve system reliability.
 
@@ -21,6 +22,8 @@ The platform collects and analyzes system logs, metrics, and error messages to p
 8. Adjust the X-axis and Y-axis fields to display desired metrics.
 
 ## Directory Structure (Important Files Only):
+
+```bash
 └── nu394-s2025tth-cs394-tribe-y/
     ├── README.md
     ├── server/
@@ -93,8 +96,10 @@ The platform collects and analyzes system logs, metrics, and error messages to p
     │           │       └── test.md
     │           └── Workitems/
     │               └── response_time_summary_workitems.md
+```
 
 ## Other Documentation:
+
 Documentation including naming, development, organization practices, etc. are located in /docs/
 
 ## Getting started
@@ -102,16 +107,19 @@ Documentation including naming, development, organization practices, etc. are lo
 Clone the repository:
 
 SSH:
+
 ```sh
 git clone git@github.com:NU394-s2025TTh/cs394-tribe-y.git
 ```
 
 HTTPS:
+
 ```sh
 git clone https://github.com/NU394-s2025TTh/cs394-tribe-y.git
 ```
 
 ## Run the development server
+
 Then, navigate to the cloned repository's directory:
 
 ```sh
