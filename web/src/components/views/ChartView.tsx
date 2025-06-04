@@ -1,29 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useJsonData } from '../../context/JsonDataContext';
-import { 
-  BarChart, 
-  Bar, 
-  LineChart, 
-  Line, 
-  PieChart, 
-  Pie, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer, 
-  Cell, 
-  Legend 
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend
 } from 'recharts';
-import { Layers, BarChart as BarChartIcon, PieChart as PieChartIcon, LineChart as LineChartIcon } from 'lucide-react';
+import { Layers, BarChart as BarChartIcon, LineChart as LineChartIcon } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 const chartColors = [
-  '#3B82F6', '#10B981', '#F97316', '#6366F1', '#EC4899', '#8B5CF6', 
+  '#3B82F6', '#10B981', '#F97316', '#6366F1', '#EC4899', '#8B5CF6',
   '#14B8A6', '#F59E0B', '#EF4444', '#06B6D4'
 ];
 
-type ChartTypes = 'bar' | 'line' | 'pie';
+type ChartTypes = 'bar' | 'line';
 
 export const ChartView: React.FC = () => {
   const { jsonData } = useJsonData();
@@ -39,6 +36,12 @@ export const ChartView: React.FC = () => {
   const [availableFields, setAvailableFields] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  const parseResponseTime = (entry: any): number | null => {
+    if (typeof entry.body !== 'string') return null;
+    const m = entry.body.match(/Response time: (\d+\.\d+)/);
+    return m ? parseFloat(m[1]) : null;
+  };
+
   useEffect(() => {
     if (!jsonData) return;
 
@@ -46,7 +49,6 @@ export const ChartView: React.FC = () => {
       let data: any[] = [];
       let fields: string[] = [];
 
-      // Handle array of objects
       if (Array.isArray(jsonData.raw)) {
         if (jsonData.raw.length === 0) {
           setError('The JSON array is empty');
@@ -57,32 +59,27 @@ export const ChartView: React.FC = () => {
           data = jsonData.raw.slice(0, 100);
           fields = Object.keys(jsonData.raw[0]);
         } else {
-          // Handle array of primitive values
           data = jsonData.raw.slice(0, 100).map((value, index) => ({
             id: index.toString(),
             value: typeof value === 'number' ? value : 1
           }));
           fields = ['id', 'value'];
         }
-      } 
-      // Handle object
-      else if (typeof jsonData.raw === 'object' && jsonData.raw !== null) {
+      } else if (typeof jsonData.raw === 'object' && jsonData.raw !== null) {
         const objKeys = Object.keys(jsonData.raw);
-        
         if (objKeys.length === 0) {
           setError('The JSON object is empty');
           return;
         }
-
-        // Convert object to array format with proper null checks
         data = objKeys.map(key => {
           const value = jsonData.raw[key];
           return {
             name: key,
-            value: typeof value === 'number' ? value : 
-                   (typeof value === 'object' && value !== null) ? 
-                   Object.keys(value).length : 
-                   1
+            value: typeof value === 'number'
+              ? value
+              : (typeof value === 'object' && value !== null)
+                ? Object.keys(value).length
+                : 1
           };
         });
         fields = ['name', 'value'];
@@ -91,25 +88,36 @@ export const ChartView: React.FC = () => {
         return;
       }
 
-      // Validate data
       if (!data.length || !fields.length) {
         setError('No valid data for visualization');
         return;
       }
 
+      let anyRt = false;
+      const enriched = data.map(item => {
+        const rt = parseResponseTime(item);
+        if (rt !== null) anyRt = true;
+        return {
+          ...item,
+          ResponseTime: rt !== null ? rt : 0
+        };
+      });
+
+      if (anyRt && !fields.includes('ResponseTime')) {
+        fields.push('ResponseTime');
+      }
+
       setError(null);
-      setChartData(data);
+      setChartData(enriched);
       setAvailableFields(fields);
-      
-      // Select initial fields
-      const numericFields = fields.filter(field => 
-        data.length > 0 && typeof data[0][field] === 'number'
+
+      const numericFields = fields.filter(f =>
+        enriched.length > 0 && typeof enriched[0][f] === 'number'
       );
-      
-      const nonNumericFields = fields.filter(field => 
-        data.length > 0 && typeof data[0][field] === 'string'
+      const nonNumericFields = fields.filter(f =>
+        enriched.length > 0 && typeof enriched[0][f] === 'string'
       );
-      
+
       if (numericFields.length > 0 && nonNumericFields.length > 0) {
         setChartFields({
           category: nonNumericFields[0],
@@ -177,9 +185,9 @@ export const ChartView: React.FC = () => {
       );
     }
 
-    const validData = chartData.filter(item => 
-      item[chartFields.category] !== undefined && 
-      item[chartFields.category] !== null && 
+    const validData = chartData.filter(item =>
+      item[chartFields.category] !== undefined &&
+      item[chartFields.category] !== null &&
       item[chartFields.category] !== ''
     );
 
@@ -197,9 +205,9 @@ export const ChartView: React.FC = () => {
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={validData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-              <XAxis 
-                dataKey={chartFields.category} 
-                angle={-45} 
+              <XAxis
+                dataKey={chartFields.category}
+                angle={-45}
                 textAnchor="end"
                 interval={0}
                 height={60}
@@ -209,11 +217,11 @@ export const ChartView: React.FC = () => {
               <Tooltip />
               <Legend />
               {chartFields.values.map((value, index) => (
-                <Bar 
-                  key={value} 
-                  dataKey={value} 
-                  name={value} 
-                  fill={chartColors[index % chartColors.length]} 
+                <Bar
+                  key={value}
+                  dataKey={value}
+                  name={value}
+                  fill={chartColors[index % chartColors.length]}
                 />
               ))}
             </BarChart>
@@ -224,9 +232,9 @@ export const ChartView: React.FC = () => {
           <ResponsiveContainer width="100%" height={400}>
             <LineChart data={validData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-              <XAxis 
+              <XAxis
                 dataKey={chartFields.category}
-                angle={-45} 
+                angle={-45}
                 textAnchor="end"
                 interval={0}
                 height={60}
@@ -236,39 +244,16 @@ export const ChartView: React.FC = () => {
               <Tooltip />
               <Legend />
               {chartFields.values.map((value, index) => (
-                <Line 
+                <Line
                   key={value}
-                  type="monotone" 
-                  dataKey={value} 
+                  type="monotone"
+                  dataKey={value}
                   name={value}
-                  stroke={chartColors[index % chartColors.length]} 
-                  activeDot={{ r: 8 }} 
+                  stroke={chartColors[index % chartColors.length]}
+                  activeDot={{ r: 8 }}
                 />
               ))}
             </LineChart>
-          </ResponsiveContainer>
-        );
-      case 'pie':
-        return (
-          <ResponsiveContainer width="100%" height={400}>
-            <PieChart>
-              <Pie
-                data={validData}
-                dataKey={chartFields.values[0]}
-                nameKey={chartFields.category}
-                cx="50%"
-                cy="50%"
-                outerRadius={150}
-                fill="#8884d8"
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-              >
-                {validData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
           </ResponsiveContainer>
         );
       default:
@@ -291,8 +276,8 @@ export const ChartView: React.FC = () => {
               onClick={() => setChartType('bar')}
               className={cn(
                 "flex items-center p-2 rounded-md transition-colors",
-                chartType === 'bar' 
-                  ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300" 
+                chartType === 'bar'
+                  ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
                   : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               )}
             >
@@ -303,25 +288,13 @@ export const ChartView: React.FC = () => {
               onClick={() => setChartType('line')}
               className={cn(
                 "flex items-center p-2 rounded-md transition-colors",
-                chartType === 'line' 
+                chartType === 'line'
                   ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
                   : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               )}
             >
               <LineChartIcon className="h-4 w-4 mr-1" />
               Line
-            </button>
-            <button
-              onClick={() => setChartType('pie')}
-              className={cn(
-                "flex items-center p-2 rounded-md transition-colors",
-                chartType === 'pie' 
-                  ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-              )}
-            >
-              <PieChartIcon className="h-4 w-4 mr-1" />
-              Pie
             </button>
           </div>
         </div>
@@ -363,7 +336,7 @@ export const ChartView: React.FC = () => {
                       ))}
                   </select>
                   {index > 0 && (
-                    <button 
+                    <button
                       onClick={() => removeValueField(index)}
                       className="p-2 text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400"
                     >
@@ -373,7 +346,7 @@ export const ChartView: React.FC = () => {
                 </div>
               ))}
               {chartFields.values.length < 5 && (
-                <button 
+                <button
                   onClick={addValueField}
                   className="flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                 >
